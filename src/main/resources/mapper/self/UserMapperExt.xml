@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.coolwind.manager.web.dao.UserDao" >
+  <resultMap id="UserMap" type="cn.coolwind.manager.web.entity.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="salt" property="salt" jdbcType="VARCHAR" />
+    <result column="state" property="state" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, username, `password`, nick_name, salt, `state`
+  </sql>
+
+  <select id="getByUsername" resultMap="UserMap">
+    select
+    <include refid="Base_Column_List"/>
+    from sys_user
+    where username = #{username}
+  </select>
+    <select id="getRolesByUserId" resultType="java.lang.String">
+      SELECT r.role FROM  sys_role r
+        LEFT JOIN sys_user_role ur on r.id = ur.role_id
+        WHERE ur.user_id = #{id}
+    </select>
+    <select id="getPermissionByUserId" resultType="java.lang.String">
+      SELECT permission_id FROM sys_role_permission
+    WHERE role_id in(SELECT role_id FROM sys_user_role WHERE user_id = #{id})
+    </select>
+  <select id="getAllPermission" resultType="cn.coolwind.manager.web.entity.Permission">
+    select id,`name`,`type`,`url` from sys_permission
+  </select>
+
+  <delete id="deleteRolePermission" parameterType="java.lang.Integer">
+    delete from sys_role_permission where role_id = #{roleId}
+  </delete>
+
+  <insert id="insertRolePermission">
+    insert into sys_role_permission(role_id,permission_id) values
+    <foreach collection="permissionIds" item="item" separator=",">
+      (#{roleId},#{item})
+    </foreach>
+  </insert>
+</mapper>
