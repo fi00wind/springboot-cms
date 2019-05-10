@@ -1,5 +1,6 @@
 package cn.coolwind.manager.web.controller;
 
+import cn.coolwind.manager.core.base.ResultObj;
 import cn.coolwind.manager.web.service.UserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.IncorrectCredentialsException;
@@ -27,19 +28,20 @@ public class UserController {
         Subject subject = SecurityUtils.getSubject();
         // 在认证提交前准备 token（令牌）
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
-        String msg = "登录成功";
+        String msg;
         // 执行认证登陆
         try {
             subject.login(token);
+            return new ResultObj<>("0000", "登录成功！");
         } catch (IncorrectCredentialsException e) {
-            msg = "IncorrectCredentialsException -- > 密码不正确：";
+            msg = "密码不正确";
         } catch (UnknownAccountException e) {
-            msg = "UnknownAccountException -- > 账号不存在：";
+            msg = "账号不存在";
         } catch (Exception e) {
             msg = "其他错误";
         }
         log.info("/login------>"+msg);
-        return msg;
+        return new ResultObj<>("5000",msg);
     }
 
     @GetMapping("/change")

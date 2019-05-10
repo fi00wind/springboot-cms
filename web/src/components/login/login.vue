@@ -46,11 +46,7 @@
                         <input @click="submit" type='button' value='登录'>
                     </div>
                 </div>
-                <div class='success'>
-                </div>
-                <div class='disclaimer'>
-                    <p></p>
-                </div>
+
 
             </div>
 
@@ -73,14 +69,19 @@
         methods:{
             submit() {
                 if (this.username == '' || this.password == '') {
-                    alert("用户名或密码不能为空！");
+                    this.$message.error("用户名或密码不能为空！");
                 }else {
                     let params = new URLSearchParams();
                     params.append("username", this.username);
                     params.append("password", this.password);
                     this.$axios.post("/manager/service/login",params).then(res=>{
-                        console.log(res);
-                        alert(res.data);
+                        let data = res.data;
+                        if (data.code = "0000") {
+                            this.$message.success(data.msg);
+                            this.$router.push('/web/manager/index');
+                        }else {
+                            this.$message.error(data.msg);
+                        }
                     })
                 }
             }
@@ -112,18 +113,18 @@
     {
         box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
         opacity: 1;
-        top: 20px;
-        -webkit-transition-timing-function: cubic-bezier(0.68, -0.25, 0.265, 0.85);
-        -webkit-transition-property: -webkit-transform,opacity,box-shadow,top,left;
+        /*top: 20px;*/
+        /*-webkit-transition-timing-function: cubic-bezier(0.68, -0.25, 0.265, 0.85);*/
+        /*-webkit-transition-property: -webkit-transform,opacity,box-shadow,top,left;*/
         transition-property: transform,opacity,box-shadow,top,left;
-        -webkit-transition-duration: .5s;
+        /*-webkit-transition-duration: .5s;*/
         transition-duration: .5s;
-        -webkit-transform-origin: 161px 100%;
+        /*-webkit-transform-origin: 161px 100%;*/
         -ms-transform-origin: 161px 100%;
         transform-origin: 161px 100%;
-        -webkit-transform: rotateX(0deg);
+        /*-webkit-transform: rotateX(0deg);*/
         transform: rotateX(0deg);
-        position: relative;
+        /*position: relative;*/
         width: 240px;
         /*border-top: 2px solid #D8312A;*/
         height: 300px;
@@ -134,12 +135,12 @@
         top: 0;
         bottom: 0;
         padding: 100px 40px 40px 40px;
-        background: #35394a;
+        /*background: #35394a;*/
         /* Old browsers */
         /* FF3.6+ */
-        background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #35394a), color-stop(100%, rgb(0, 0, 0)));
+        /*background: -webkit-gradient(linear, left bottom, right top, color-stop(0%, #35394a), color-stop(100%, rgb(0, 0, 0)));*/
         /* Chrome,Safari4+ */
-        background: -webkit-linear-gradient(230deg, rgba(53, 57, 74, 0) 0%, rgb(0, 0, 0) 100%);
+        /*background: -webkit-linear-gradient(230deg, rgba(53, 57, 74, 0) 0%, rgb(0, 0, 0) 100%);*/
         /* Chrome10+,Safari5.1+ */
         /* Opera 11.10+ */
         /* IE10+ */
@@ -155,22 +156,19 @@
         top: 14px;
         opacity: 0;
     }
-     .login .disclaimer {
-        position: absolute;
-        bottom: 20px;
-        left: 35px;
-        width: 250px;
-    }
      .login_title {
         color: #D3D7F7;
         height: 60px;
         text-align: left;
         font-size: 16px;
+         position: relative;
+         top: -50px;
     }
      .login_fields {
         height: 208px;
         position: absolute;
         left: 0;
+         top: 100px;
     }
      .login_fields .icon {
         position: absolute;

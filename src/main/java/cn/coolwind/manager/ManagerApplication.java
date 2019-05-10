@@ -15,4 +15,5 @@ public class ManagerApplication {
         log.info("##################################系统启动成功!!!");
     }
 
+
 }
